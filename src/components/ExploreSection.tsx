@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Candle } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 
 interface LegendCardProps {
   title: string;
@@ -24,7 +24,7 @@ const LegendCard = ({ title, description, delay }: LegendCardProps) => {
       <CardFooter>
         <Button variant="ghost" className="text-aged-white/70 hover:text-blood-red hover:bg-transparent p-0 flex items-center">
           Ler mais
-          <Candle className="ml-2 h-4 w-4 animate-float" />
+          <BookOpen className="ml-2 h-4 w-4 animate-float" />
         </Button>
       </CardFooter>
     </Card>
