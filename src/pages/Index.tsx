@@ -1,11 +1,20 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import Header from '@/components/Header';
+import FeaturedLegend from '@/components/FeaturedLegend';
+import ExploreSection from '@/components/ExploreSection';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen flex flex-col bg-background">
+      <div className="container mx-auto px-4 flex-grow flex flex-col">
+        <Header />
+        <main className="flex-grow flex flex-col items-center">
+          <FeaturedLegend />
+          <ExploreSection />
+        </main>
+        <Footer />
       </div>
     </div>
   );
