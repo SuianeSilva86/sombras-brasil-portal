@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import FeaturedLegend from '@/components/FeaturedLegend';
-import ExploreSection from '@/components/ExploreSection';
+import LegendCollection from '@/components/LegendCollection';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -12,7 +12,7 @@ const Index = () => {
         <Header />
         <main className="flex-grow flex flex-col items-center">
           <FeaturedLegend />
-          <ExploreSection />
+          <LegendCollection />
         </main>
         <Footer />
       </div>
