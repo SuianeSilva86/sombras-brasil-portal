@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Eye, Key, Hand, Moon, Star, Circle, Flame, Ghost, Candlestick } from 'lucide-react';
+import { Eye, Key, Hand, Moon, Star, Circle, Flame, Ghost } from 'lucide-react';
 
 type IconType = 'eye' | 'key' | 'hand' | 'moon' | 'star' | 'circle' | 'flame' | 'ghost' | 'seal' | 'candle';
 
