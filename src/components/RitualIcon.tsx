@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Eye, Key, Hand, Moon, Star, Circle, Flame, Ghost } from 'lucide-react';
+import { Eye, Key, Hand, Moon, Star, Circle, Flame, Ghost, Candlestick } from 'lucide-react';
 
-type IconType = 'eye' | 'key' | 'hand' | 'moon' | 'star' | 'circle' | 'flame' | 'ghost' | 'seal';
+type IconType = 'eye' | 'key' | 'hand' | 'moon' | 'star' | 'circle' | 'flame' | 'ghost' | 'seal' | 'candle';
 
 interface RitualIconProps {
   icon: IconType;
@@ -44,6 +44,8 @@ const RitualIcon: React.FC<RitualIconProps> = ({
       return <Flame size={size} className={combinedClass} style={iconStyle} />;
     case 'ghost':
       return <Ghost size={size} className={combinedClass} style={iconStyle} />;
+    case 'candle':
+      return <Flame size={size} className={combinedClass} style={iconStyle} />; // Using Flame as a substitute for Candle
     case 'seal':
       return (
         <div className={`relative ${combinedClass}`}>
