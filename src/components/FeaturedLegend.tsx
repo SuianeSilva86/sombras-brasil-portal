@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import RitualButton from '@/components/RitualButton';
 import RitualIcon from '@/components/RitualIcon';
-import { Eye, Ghost } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const FeaturedLegend = () => {
