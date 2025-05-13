@@ -9,12 +9,14 @@ import Explorar from "./pages/Explorar";
 import Enviar from "./pages/Enviar";
 import LerLenda from "./pages/LerLenda";
 import NotFound from "./pages/NotFound";
+import TextureOverlay from "./components/TextureOverlay";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <TextureOverlay variant="paper" opacity={0.05} />
       <Toaster />
       <Sonner />
       <BrowserRouter>
