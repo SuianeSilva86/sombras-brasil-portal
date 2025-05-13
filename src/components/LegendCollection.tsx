@@ -1,12 +1,13 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Star, Ghost, Book } from 'lucide-react';
+import { BookOpen, Star, Ghost, Book, User } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
-const legends = [
+// Mock de dados para lendas em destaque
+const featuredLegends = [
   {
     id: 1,
     title: "Curupira",
@@ -57,16 +58,39 @@ const LegendCard = ({ legend }) => {
         </p>
       </CardContent>
       <CardFooter className="pt-2 border-t border-muted/30">
-        <Button variant="ghost" className="text-aged-white/70 hover:text-blood-red hover:bg-transparent p-0 flex items-center w-full justify-center">
-          Ler mais
-          <BookOpen className="ml-2 h-4 w-4 animate-float" />
-        </Button>
+        <Link to={`/ler-lenda/${legend.id}`} className="w-full">
+          <Button variant="ghost" className="text-aged-white/70 hover:text-blood-red hover:bg-transparent p-0 flex items-center w-full justify-center">
+            Ler mais
+            <BookOpen className="ml-2 h-4 w-4 animate-float" />
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
 };
 
 const LegendCollection = () => {
+  const [userLegends, setUserLegends] = useState([]);
+  
+  useEffect(() => {
+    // Carregar lendas enviadas pelos usuários
+    try {
+      const savedLegends = JSON.parse(localStorage.getItem("legends") || "[]");
+      setUserLegends(savedLegends.slice(0, 3).map(legend => ({
+        id: legend.id,
+        title: legend.title,
+        description: legend.story.substring(0, 150) + "...",
+        icon: <User className="text-blood-red" />,
+        image: "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      })));
+    } catch (error) {
+      console.error("Erro ao carregar lendas:", error);
+    }
+  }, []);
+
+  // Combine lendas em destaque com lendas dos usuários
+  const displayLegends = [...featuredLegends, ...userLegends].slice(0, 6);
+
   return (
     <section className="w-full max-w-5xl mx-auto mb-16 px-4">
       <div className="flex items-center justify-center mb-8">
@@ -78,7 +102,7 @@ const LegendCollection = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {legends.map((legend) => (
+        {displayLegends.map((legend) => (
           <LegendCard key={legend.id} legend={legend} />
         ))}
       </div>
