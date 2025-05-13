@@ -1,17 +1,36 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import RitualButton from '@/components/RitualButton';
 import RitualIcon from '@/components/RitualIcon';
+import ScaryText from '@/components/ScaryText';
 import { Eye } from 'lucide-react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { cn } from '@/lib/utils';
 
 const FeaturedLegend = () => {
+  const [hauntedEffect, setHauntedEffect] = useState(false);
+  
+  // Random haunting effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        setHauntedEffect(true);
+        setTimeout(() => setHauntedEffect(false), 300);
+      }
+    }, 8000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <section className="w-full max-w-5xl mx-auto my-12 px-4 animate-fade-in" style={{ animationDelay: '0.3s' }}>
       <div className="flex items-center justify-center mb-8">
         <div className="h-px w-16 bg-blood-red/50"></div>
-        <h2 className="font-playfair text-3xl px-4 text-center text-aged-white flex items-center">
+        <h2 className={cn(
+          "font-playfair text-3xl px-4 text-center text-aged-white flex items-center",
+          hauntedEffect && "animate-text-glitch"
+        )}>
           <RitualIcon icon="flame" className="mr-2 text-blood-red" size={20} />
           A Sombra que Sussurra
           <RitualIcon icon="flame" className="ml-2 text-blood-red" size={20} />
@@ -28,9 +47,24 @@ const FeaturedLegend = () => {
               <img 
                 src="https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" 
                 alt="Loira do Banheiro" 
-                className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+                className={cn(
+                  "object-cover w-full h-full transition-transform duration-700 group-hover:scale-105",
+                  hauntedEffect && "brightness-50 contrast-125"
+                )}
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+              
+              {/* Blood drip effect */}
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div 
+                  key={i}
+                  className="absolute top-0 w-[1px] h-8 bg-blood-red animate-blood-drip opacity-0"
+                  style={{ 
+                    left: `${20 + i * 30}%`,
+                    animationDelay: `${i * 1.5}s`
+                  }}
+                />
+              ))}
             </AspectRatio>
           </div>
           
@@ -40,12 +74,18 @@ const FeaturedLegend = () => {
               <RitualIcon icon="ghost" animate={true} size={24} />
             </div>
             
-            <h2 className="font-playfair text-3xl md:text-4xl mb-3 text-blood-red flex items-center">
+            <ScaryText 
+              text="Loira do Banheiro" 
+              className="font-playfair text-3xl md:text-4xl mb-3 text-blood-red flex items-center"
+              delay={300}
+            >
               <RitualIcon icon="flame" className="mr-2 text-blood-red animate-pulse-soft inline" size={20} />
-              Loira do Banheiro
-            </h2>
+            </ScaryText>
             
-            <p className="font-lora text-base md:text-lg text-aged-white/90 mb-6 leading-relaxed border-l-2 border-blood-red pl-4">
+            <p className={cn(
+              "font-lora text-base md:text-lg text-aged-white/90 mb-6 leading-relaxed border-l-2 border-blood-red pl-4",
+              hauntedEffect && "text-blood-red/90"
+            )}>
               "Uma das lendas urbanas mais icônicas do Brasil, a história de uma garota de longos cabelos loiros que assombra os banheiros das escolas. Dizem que ao apagar as luzes e chamar seu nome três vezes em frente ao espelho, ela surge para aterrorizar os incautos."
             </p>
             
@@ -60,10 +100,14 @@ const FeaturedLegend = () => {
               </div>
             </div>
             
-            <Link to="/ler-lenda/4" className="mt-6">
+            <div className="absolute -right-20 -bottom-20 opacity-5 pointer-events-none">
+              <RitualIcon icon="ghost" size={200} className="text-blood-red animate-mist-flow" />
+            </div>
+            
+            <Link to="/ler-lenda/4" className="mt-6 relative group">
               <RitualButton 
                 variant="outline" 
-                className="bg-transparent border border-blood-red text-blood-red hover:bg-blood-red/10 group"
+                className="bg-transparent border border-blood-red text-blood-red hover:bg-blood-red/10 group animate-flicker"
                 icon={<RitualIcon icon="eye" />}
               >
                 Desvendar Mistério

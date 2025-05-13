@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -116,6 +115,44 @@ export default {
 					'0%': { transform: 'translateX(0) translateY(0)' },
 					'50%': { transform: 'translateX(30px) translateY(-15px)' },
 					'100%': { transform: 'translateX(0) translateY(0)' }
+				},
+				'textShadow': {
+					'0%': { 
+						textShadow: '0.25px 0 0 rgba(255,0,0,0.75), -0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'14%': { 
+						textShadow: '0.25px 0 0 rgba(255,0,0,0.75), -0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'15%': { 
+						textShadow: '-0.5px 0 0 rgba(255,0,0,0.75), 0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'49%': { 
+						textShadow: '-0.5px 0 0 rgba(255,0,0,0.75), 0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'50%': { 
+						textShadow: '0.25px 0 0 rgba(255,0,0,0.75), 0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'99%': { 
+						textShadow: '0.25px 0 0 rgba(255,0,0,0.75), 0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					},
+					'100%': { 
+						textShadow: '-0.25px 0 0 rgba(255,0,0,0.75), -0.25px 0 0 rgba(0,255,0,0.75), 0 0 0 rgba(0,0,255,0.75)'
+					}
+				},
+				'flicker': {
+					'0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100%': {
+						opacity: '0.99',
+						filter: 'drop-shadow(0 0 1px rgba(202,0,0,0.5)) drop-shadow(0 0 4px rgba(202,0,0,0.2))'
+					},
+					'20%, 21.999%, 63%, 63.999%, 65%, 69.999%': {
+						opacity: '0.4',
+						filter: 'none'
+					}
+				},
+				'blood-drip': {
+					'0%': { transform: 'translateY(0)', opacity: '0' },
+					'50%': { transform: 'translateY(10px)', opacity: '1' },
+					'100%': { transform: 'translateY(20px)', opacity: '0' }
 				}
 			},
 			animation: {
@@ -126,7 +163,10 @@ export default {
 				'float': 'float 6s infinite ease-in-out',
 				'ritual-glow': 'ritual-glow 4s infinite ease-in-out',
 				'mystical-fade': 'mystical-fade 1.5s ease-out forwards',
-				'mist-flow': 'mist-flow 15s infinite ease-in-out'
+				'mist-flow': 'mist-flow 15s infinite ease-in-out',
+				'text-glitch': 'textShadow 1.6s infinite',
+				'flicker': 'flicker 4s linear infinite',
+				'blood-drip': 'blood-drip 4s ease-in-out infinite',
 			}
 		}
 	},
