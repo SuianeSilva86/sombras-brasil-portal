@@ -86,4 +86,5 @@ const RitualIcon: React.FC<RitualIconProps> = ({
   }
 };
 
+export { RitualIcon };
 export default RitualIcon;

@@ -2,7 +2,7 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import { RitualIcon } from './components/RitualIcon.tsx'
+import RitualIcon from './components/RitualIcon.tsx'
 
 // Easter egg no console
 console.log('%c⚠️ AVISO: FORÇAS OBSCURAS ⚠️', 'color:red; font-size:20px; font-weight:bold;');

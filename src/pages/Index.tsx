@@ -8,6 +8,7 @@ import ScaryText from '@/components/ScaryText';
 import { Volume2, VolumeX } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/components/ui/use-toast';
+import RitualIcon from '@/components/RitualIcon';
 
 const AmbientParticles = ({ reduced = false }) => {
   if (reduced) return null;
