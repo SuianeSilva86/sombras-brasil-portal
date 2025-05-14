@@ -1,7 +1,15 @@
 
 import React, { useEffect, useRef } from 'react';
 
-const HauntedBackground = () => {
+interface HauntedBackgroundProps {
+  intensity?: 'low' | 'medium' | 'high';
+  reducedMotion?: boolean;
+}
+
+const HauntedBackground: React.FC<HauntedBackgroundProps> = ({
+  intensity = 'medium',
+  reducedMotion = false
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   useEffect(() => {
@@ -10,6 +18,10 @@ const HauntedBackground = () => {
     
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
+    // Verificamos se o usuário prefere redução de movimento através do sistema operacional
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const shouldAnimate = !reducedMotion && !prefersReducedMotion && !document.documentElement.classList.contains('reduce-motion');
     
     // Set canvas dimensions
     const resizeCanvas = () => {
@@ -21,6 +33,15 @@ const HauntedBackground = () => {
     resizeCanvas();
     
     // Create haunting mist particles
+    const getParticleCount = () => {
+      switch (intensity) {
+        case 'low': return 20;
+        case 'high': return 80;
+        case 'medium':
+        default: return 50;
+      }
+    };
+    
     const particles: {
       x: number;
       y: number;
@@ -34,7 +55,8 @@ const HauntedBackground = () => {
     }[] = [];
     
     const createParticles = () => {
-      for (let i = 0; i < 50; i++) {
+      const particleCount = getParticleCount();
+      for (let i = 0; i < particleCount; i++) {
         const radius = Math.random() * 2 + 1;
         particles.push({
           x: Math.random() * canvas.width,
@@ -53,8 +75,13 @@ const HauntedBackground = () => {
     createParticles();
     
     // Animation loop
+    let animationFrameId: number;
+    
     const animate = () => {
-      requestAnimationFrame(animate);
+      if (shouldAnimate) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Draw particles
@@ -65,15 +92,17 @@ const HauntedBackground = () => {
         ctx.globalAlpha = particle.alpha;
         ctx.fill();
         
-        // Update position
-        particle.x += particle.velocity.x;
-        particle.y += particle.velocity.y;
-        
-        // Wrap around screen
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
+        // Update position only if animation is enabled
+        if (shouldAnimate) {
+          particle.x += particle.velocity.x;
+          particle.y += particle.velocity.y;
+          
+          // Wrap around screen
+          if (particle.x < 0) particle.x = canvas.width;
+          if (particle.x > canvas.width) particle.x = 0;
+          if (particle.y < 0) particle.y = canvas.height;
+          if (particle.y > canvas.height) particle.y = 0;
+        }
       });
     };
     
@@ -81,8 +110,9 @@ const HauntedBackground = () => {
     
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [intensity, reducedMotion]);
   
   return (
     <canvas 
@@ -92,6 +122,7 @@ const HauntedBackground = () => {
         mixBlendMode: 'multiply',
         filter: 'blur(2px)' 
       }}
+      aria-hidden="true"
     />
   );
 };

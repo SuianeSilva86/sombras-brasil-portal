@@ -12,12 +12,19 @@ import NotFound from "./pages/NotFound";
 import TextureOverlay from "./components/TextureOverlay";
 import HauntedBackground from "./components/HauntedBackground";
 import HauntedCursor from "./components/HauntedCursor";
-import { useEffect } from "react";
+import AccessibilityControls from "./components/AccessibilityControls";
+import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Update favicon
+  const [reducedMotion, setReducedMotion] = useState(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const storedSetting = localStorage.getItem('a11y-reduced-motion');
+    return storedSetting ? JSON.parse(storedSetting) : prefersReducedMotion;
+  });
+
+  // Update favicon and listen for accessibility changes
   useEffect(() => {
     const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (link) {
@@ -32,17 +39,33 @@ const App = () => {
     // Add scary cursor style
     document.body.classList.add("cursor-none");
     
+    // Listen for reduced motion changes
+    const handleReducedMotionChange = () => {
+      const reducedMotionSetting = localStorage.getItem('a11y-reduced-motion');
+      setReducedMotion(reducedMotionSetting === 'true');
+    };
+    
+    window.addEventListener('storage', handleReducedMotionChange);
+    
     return () => {
       document.body.classList.remove("cursor-none");
+      window.removeEventListener('storage', handleReducedMotionChange);
     };
   }, []);
   
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <TextureOverlay variant="paper" opacity={0.05} />
-        <HauntedBackground />
-        <HauntedCursor />
+        {/* Skip link para acessibilidade por teclado */}
+        <a href="#main-content" className="skip-link">
+          Pular para o conteúdo principal
+        </a>
+        
+        <TextureOverlay variant="paper" opacity={reducedMotion ? 0.02 : 0.05} />
+        <HauntedBackground intensity="medium" reducedMotion={reducedMotion} />
+        <HauntedCursor reducedMotion={reducedMotion} />
+        <AccessibilityControls />
+        
         <Toaster />
         <Sonner />
         <BrowserRouter>

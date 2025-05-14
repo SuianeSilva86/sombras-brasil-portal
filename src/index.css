@@ -46,6 +46,20 @@
     --sidebar-border: 0 0% 15%;
     --sidebar-ring: 30 70% 40%;
   }
+  
+  .high-contrast {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 100%;
+    
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 100%;
+    
+    --primary: 0 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    
+    --border: 0 0% 40%;
+    --ring: 0 100% 50%;
+  }
 }
 
 @layer base {
@@ -60,6 +74,23 @@
   ::selection {
     @apply bg-blood-red/50 text-aged-white;
   }
+  
+  /* Acessibilidade - Redução de movimentos */
+  .reduce-motion * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  /* Melhorar a visibilidade do foco */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+  
+  /* Links mais perceptíveis */
+  a:not(.no-underline) {
+    @apply underline underline-offset-2 hover:text-primary;
+  }
 }
 
 @layer components {
@@ -69,5 +100,14 @@
   
   .card-hover {
     @apply transition-all duration-500 hover:shadow-[0_0_15px_rgba(202,0,0,0.3)] hover:scale-[1.02];
+  }
+  
+  /* Componentes acessíveis */
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  }
+  
+  .skip-link {
+    @apply absolute left-4 top-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md transform -translate-y-20 focus:translate-y-0 transition-transform;
   }
 }

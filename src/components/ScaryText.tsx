@@ -8,6 +8,7 @@ interface ScaryTextProps {
   delay?: number;
   glitchInterval?: number;
   children?: React.ReactNode;
+  respectReducedMotion?: boolean;
 }
 
 const ScaryText: React.FC<ScaryTextProps> = ({
@@ -16,11 +17,23 @@ const ScaryText: React.FC<ScaryTextProps> = ({
   delay = 0,
   glitchInterval = 5000,
   children,
+  respectReducedMotion = true,
 }) => {
   const [displayText, setDisplayText] = useState("");
   const [isGlitching, setIsGlitching] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(true);
   
   useEffect(() => {
+    // Verificamos se os efeitos devem ser reduzidos
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hasReducedMotion = document.documentElement.classList.contains('reduce-motion');
+    
+    if (respectReducedMotion && (prefersReducedMotion || hasReducedMotion)) {
+      setShouldAnimate(false);
+      setDisplayText(text); // Mostrar o texto completo imediatamente
+      return;
+    }
+    
     let timeout: NodeJS.Timeout;
     
     // Start typing effect after delay
@@ -40,10 +53,12 @@ const ScaryText: React.FC<ScaryTextProps> = ({
     }, delay);
     
     return () => clearTimeout(timeout);
-  }, [text, delay]);
+  }, [text, delay, respectReducedMotion]);
   
   // Random glitch effect
   useEffect(() => {
+    if (!shouldAnimate) return;
+    
     const glitchTimeout = setInterval(() => {
       if (Math.random() > 0.7) {
         setIsGlitching(true);
@@ -52,21 +67,21 @@ const ScaryText: React.FC<ScaryTextProps> = ({
     }, glitchInterval);
     
     return () => clearInterval(glitchTimeout);
-  }, [glitchInterval]);
+  }, [glitchInterval, shouldAnimate]);
   
   return (
     <div className={cn(
       "relative",
-      isGlitching && "animate-[textShadow_1.6s_infinite]",
+      isGlitching && shouldAnimate && "animate-[textShadow_1.6s_infinite]",
       className
     )}>
       <span className={cn(
         "relative inline-block",
-        isGlitching && "after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-[1px] after:bg-blood-red after:animate-pulse"
+        isGlitching && shouldAnimate && "after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-[1px] after:bg-blood-red after:animate-pulse"
       )}>
         {displayText}
         {children}
-        {displayText.length < text.length && (
+        {displayText.length < text.length && shouldAnimate && (
           <span className="animate-pulse ml-0.5">|</span>
         )}
       </span>
