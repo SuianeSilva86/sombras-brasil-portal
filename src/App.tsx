@@ -36,13 +36,23 @@ const App = () => {
       document.head.appendChild(newLink);
     }
     
-    // Add scary cursor style
-    document.body.classList.add("cursor-none");
+    // Don't add cursor-none if reduced motion is enabled
+    if (!reducedMotion) {
+      document.body.classList.add("cursor-none");
+    }
     
     // Listen for reduced motion changes
     const handleReducedMotionChange = () => {
       const reducedMotionSetting = localStorage.getItem('a11y-reduced-motion');
-      setReducedMotion(reducedMotionSetting === 'true');
+      const newSetting = reducedMotionSetting === 'true';
+      setReducedMotion(newSetting);
+      
+      // Toggle cursor-none class based on reduced motion
+      if (newSetting) {
+        document.body.classList.remove("cursor-none");
+      } else {
+        document.body.classList.add("cursor-none");
+      }
     };
     
     window.addEventListener('storage', handleReducedMotionChange);
@@ -51,7 +61,7 @@ const App = () => {
       document.body.classList.remove("cursor-none");
       window.removeEventListener('storage', handleReducedMotionChange);
     };
-  }, []);
+  }, [reducedMotion]);
   
   return (
     <QueryClientProvider client={queryClient}>
