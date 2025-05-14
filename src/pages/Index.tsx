@@ -6,6 +6,8 @@ import LegendCollection from '@/components/LegendCollection';
 import Footer from '@/components/Footer';
 import ScaryText from '@/components/ScaryText';
 import { Volume2, VolumeX } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from '@/components/ui/use-toast';
 
 const AmbientParticles = ({ reduced = false }) => {
   if (reduced) return null;
@@ -83,9 +85,48 @@ const CreepyWhispers = ({ reduced = false }) => {
   );
 };
 
+// Jumpscare component that shows rarely
+const RandomJumpscare = ({ reduced = false }) => {
+  const [showJumpscare, setShowJumpscare] = useState(false);
+
+  useEffect(() => {
+    if (reduced) return;
+
+    // Very low chance of jumpscare
+    const interval = setInterval(() => {
+      // 1% chance every 30 seconds
+      if (Math.random() < 0.01) {
+        setShowJumpscare(true);
+        setTimeout(() => {
+          setShowJumpscare(false);
+        }, 300);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [reduced]);
+
+  if (!showJumpscare) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+      aria-hidden="true"
+      style={{
+        animation: 'jumpscare 0.3s ease-out forwards'
+      }}
+    >
+      <div className="p-4">
+        <RitualIcon icon="ghost" size={160} className="text-blood-red" />
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [reducedEffects, setReducedEffects] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     // Verifica preferências de usuário
@@ -123,6 +164,20 @@ const Index = () => {
     
     window.addEventListener('storage', handleSettingsChange);
     document.addEventListener('a11y-settings-changed', handleSettingsChange);
+
+    // Simular carregamento da página para efeito de suspense
+    setTimeout(() => {
+      setIsLoading(false);
+      if (!reducedEffects) {
+        setTimeout(() => {
+          toast({
+            title: "Um espírito se aproxima...",
+            description: "Sinta a presença das sombras ao seu redor.",
+            className: "bg-background border-blood-red text-blood-red",
+          });
+        }, 3000);
+      }
+    }, 1000);
     
     return () => {
       window.removeEventListener('storage', handleSettingsChange);
@@ -149,6 +204,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
       <AmbientParticles reduced={reducedEffects} />
       <CreepyWhispers reduced={reducedEffects} />
+      <RandomJumpscare reduced={reducedEffects} />
       
       <audio 
         id="ambient-audio" 
@@ -171,20 +227,37 @@ const Index = () => {
       
       <div id="main-content" className="container mx-auto px-4 flex-grow flex flex-col relative z-10">
         <Header />
-        <main className="flex-grow flex flex-col items-center">
-          <div className="w-full text-center my-6">
-            <ScaryText 
-              text="Bem-vindo às Sombras do Brasil" 
-              className="font-playfair text-3xl md:text-4xl text-blood-red"
-              respectReducedMotion={true}
-            />
-            <p className="font-lora text-aged-white/70 mt-2 italic">
-              onde os pesadelos ganham vida e as lendas nunca morrem
-            </p>
+        
+        {isLoading ? (
+          <div className="flex-grow flex flex-col items-center animate-pulse">
+            <div className="w-full text-center my-6">
+              <Skeleton className="h-10 w-64 mx-auto mb-2" />
+              <Skeleton className="h-4 w-48 mx-auto" />
+            </div>
+            <Skeleton className="h-80 w-full max-w-5xl mx-auto mb-12 rounded-lg" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
+              <Skeleton className="h-64 rounded-lg" />
+              <Skeleton className="h-64 rounded-lg" />
+              <Skeleton className="h-64 rounded-lg" />
+            </div>
           </div>
-          <FeaturedLegend />
-          <LegendCollection />
-        </main>
+        ) : (
+          <main className="flex-grow flex flex-col items-center">
+            <div className="w-full text-center my-6">
+              <ScaryText 
+                text="Bem-vindo às Sombras do Brasil" 
+                className="font-playfair text-3xl md:text-4xl text-blood-red"
+                respectReducedMotion={true}
+              />
+              <p className="font-lora text-aged-white/70 mt-2 italic">
+                onde os pesadelos ganham vida e as lendas nunca morrem
+              </p>
+            </div>
+            <FeaturedLegend />
+            <LegendCollection />
+          </main>
+        )}
+        
         <Footer />
       </div>
     </div>

@@ -1,8 +1,37 @@
 
 import React from 'react';
-import { Eye, Key, Hand, Moon, Star, Circle, Flame, Ghost } from 'lucide-react';
+import { 
+  Moon, 
+  Eye, 
+  Star, 
+  Circle, 
+  Flame, 
+  Shield, 
+  Ghost, 
+  Key, 
+  BookOpen,
+  Skull,
+  Bookmark,
+  User,
+  Clock
+} from 'lucide-react';
 
-type IconType = 'eye' | 'key' | 'hand' | 'moon' | 'star' | 'circle' | 'flame' | 'ghost' | 'seal' | 'candle';
+type IconType = 
+  | 'moon' 
+  | 'eye' 
+  | 'star' 
+  | 'circle' 
+  | 'flame' 
+  | 'shield' 
+  | 'ghost'
+  | 'key'
+  | 'book'
+  | 'skull'
+  | 'bookmark'
+  | 'user'
+  | 'clock'
+  | 'seal'
+  | 'candle';
 
 interface RitualIconProps {
   icon: IconType;
@@ -13,52 +42,47 @@ interface RitualIconProps {
 
 const RitualIcon: React.FC<RitualIconProps> = ({ 
   icon, 
-  size = 24, 
+  size = 16, 
   className = "",
   animate = false
 }) => {
-  const animationClass = animate ? "animate-pulse-soft" : "";
-  const combinedClass = `${className} ${animationClass}`;
-  
-  // Custom styling for woodcut appearance
-  const iconStyle = {
-    strokeWidth: 1.5,
-    strokeLinejoin: 'bevel' as const,
-    filter: 'drop-shadow(0px 0px 1px rgba(0,0,0,0.3))'
-  };
+  const animationClass = animate ? 'animate-pulse-soft' : '';
+  const classes = `${className} ${animationClass}`;
   
   switch (icon) {
-    case 'eye':
-      return <Eye size={size} className={combinedClass} style={iconStyle} />;
-    case 'key':
-      return <Key size={size} className={combinedClass} style={iconStyle} />;
-    case 'hand':
-      return <Hand size={size} className={combinedClass} style={iconStyle} />;
     case 'moon':
-      return <Moon size={size} className={combinedClass} style={iconStyle} />;
+      return <Moon size={size} className={classes} />;
+    case 'eye':
+      return <Eye size={size} className={classes} />;
     case 'star':
-      return <Star size={size} className={combinedClass} style={iconStyle} />;
+      return <Star size={size} className={classes} />;
     case 'circle':
-      return <Circle size={size} className={combinedClass} style={iconStyle} />;
+      return <Circle size={size} className={classes} />;
     case 'flame':
-      return <Flame size={size} className={combinedClass} style={iconStyle} />;
+      return <Flame size={size} className={classes} />;
+    case 'shield':
+      return <Shield size={size} className={classes} />;
     case 'ghost':
-      return <Ghost size={size} className={combinedClass} style={iconStyle} />;
-    case 'candle':
-      return <Flame size={size} className={combinedClass} style={iconStyle} />; // Using Flame as a substitute for Candle
+      return <Ghost size={size} className={classes} />;
+    case 'key':
+      return <Key size={size} className={classes} />;
+    case 'book':
+      return <BookOpen size={size} className={classes} />;
+    case 'skull':
+      return <Skull size={size} className={classes} />;
+    case 'bookmark':
+      return <Bookmark size={size} className={classes} />;
+    case 'user':
+      return <User size={size} className={classes} />;
+    case 'clock':
+      return <Clock size={size} className={classes} />;
+    // Ícones adicionais usados como substitutos
     case 'seal':
-      return (
-        <div className={`relative ${combinedClass}`}>
-          <Circle size={size} style={iconStyle} />
-          <Star 
-            size={size * 0.7} 
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" 
-            style={iconStyle}
-          />
-        </div>
-      );
+      return <Bookmark size={size} className={classes} />;
+    case 'candle':
+      return <Flame size={size} className={classes} />;
     default:
-      return <Circle size={size} className={combinedClass} style={iconStyle} />;
+      return <Circle size={size} className={classes} />;
   }
 };
 

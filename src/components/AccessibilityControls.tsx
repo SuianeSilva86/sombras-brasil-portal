@@ -9,6 +9,7 @@ import {
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
 
 interface AccessibilitySettingsProps {
   className?: string;
@@ -32,6 +33,21 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
   useEffect(() => {
     localStorage.setItem('a11y-reduced-motion', JSON.stringify(reducedMotion));
     document.documentElement.classList.toggle('reduce-motion', reducedMotion);
+    
+    // Notificação quando o usuário ativa/desativa efeitos reduzidos
+    if (reducedMotion) {
+      toast({
+        title: "Modo Seguro Ativado",
+        description: "Os efeitos assustadores foram reduzidos para sua segurança.",
+        className: "bg-background border-blue-500 text-blue-500",
+      });
+    } else {
+      toast({
+        title: "Experiência Completa Ativada",
+        description: "Prepare-se para encontrar as sombras...",
+        className: "bg-background border-blood-red text-blood-red",
+      });
+    }
   }, [reducedMotion]);
 
   useEffect(() => {
@@ -83,7 +99,7 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
                 onClick={() => setReducedMotion(!reducedMotion)}
               >
                 <EyeOff size={16} className="mr-2" />
-                <span className="text-sm">Reduzir movimentos</span>
+                <span className="text-sm">Reduzir efeitos assustadores</span>
               </Button>
               
               <Button
@@ -109,6 +125,10 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
                 <VolumeX size={16} className="mr-2" />
                 <span className="text-sm">Desativar sons</span>
               </Button>
+              
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                Essas opções garantem uma experiência segura para todos
+              </p>
             </div>
           </div>
         )}

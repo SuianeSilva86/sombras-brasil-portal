@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 
 const FeaturedLegend = () => {
   const [hauntedEffect, setHauntedEffect] = useState(false);
+  const [showGhost, setShowGhost] = useState(false);
   
   // Random haunting effect
   useEffect(() => {
@@ -17,6 +18,12 @@ const FeaturedLegend = () => {
       if (Math.random() > 0.7) {
         setHauntedEffect(true);
         setTimeout(() => setHauntedEffect(false), 300);
+      }
+      
+      // Randomly show/hide ghost
+      if (Math.random() > 0.85) {
+        setShowGhost(true);
+        setTimeout(() => setShowGhost(false), 800);
       }
     }, 8000);
     
@@ -65,6 +72,19 @@ const FeaturedLegend = () => {
                   }}
                 />
               ))}
+              
+              {/* Ghost effect */}
+              <div 
+                className={cn(
+                  "absolute w-full h-full pointer-events-none transition-opacity duration-300",
+                  showGhost ? "opacity-30" : "opacity-0"
+                )}
+                aria-hidden="true"
+              >
+                <div className="absolute top-[40%] left-[60%] animate-ghost-float">
+                  <RitualIcon icon="ghost" size={60} className="text-white/60" />
+                </div>
+              </div>
             </AspectRatio>
           </div>
           

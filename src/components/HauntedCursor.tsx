@@ -1,74 +1,142 @@
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface HauntedCursorProps {
   reducedMotion?: boolean;
 }
 
-const HauntedCursor: React.FC<HauntedCursorProps> = ({ reducedMotion = false }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
-  
+const HauntedCursor = ({ reducedMotion = false }: HauntedCursorProps) => {
   useEffect(() => {
-    // Verificamos se o usuário prefere redução de movimento através do sistema operacional
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const shouldShowEffects = !reducedMotion && !prefersReducedMotion && !document.documentElement.classList.contains('reduce-motion');
+    if (reducedMotion) return;
     
-    if (!shouldShowEffects) {
-      return;
+    const cursor = document.createElement('div');
+    cursor.classList.add('custom-cursor');
+    cursor.style.position = 'fixed';
+    cursor.style.width = '24px';
+    cursor.style.height = '24px';
+    cursor.style.borderRadius = '12px';
+    cursor.style.border = '2px solid rgba(202, 0, 0, 0.4)';
+    cursor.style.backgroundColor = 'rgba(202, 0, 0, 0.1)';
+    cursor.style.pointerEvents = 'none';
+    cursor.style.zIndex = '9999';
+    cursor.style.transform = 'translate(-50%, -50%)';
+    cursor.style.mixBlendMode = 'difference';
+    cursor.style.backdropFilter = 'invert(0.2)';
+    cursor.style.transition = 'width 0.3s, height 0.3s, opacity 0.3s';
+    
+    const innerCursor = document.createElement('div');
+    innerCursor.classList.add('inner-cursor');
+    innerCursor.style.position = 'absolute';
+    innerCursor.style.width = '6px';
+    innerCursor.style.height = '6px';
+    innerCursor.style.borderRadius = '50%';
+    innerCursor.style.backgroundColor = 'rgba(202, 0, 0, 0.8)';
+    innerCursor.style.left = '50%';
+    innerCursor.style.top = '50%';
+    innerCursor.style.transform = 'translate(-50%, -50%)';
+    
+    cursor.appendChild(innerCursor);
+    document.body.appendChild(cursor);
+    
+    const trailEffects: HTMLDivElement[] = [];
+    let maxTrailCount = 5;
+    
+    for (let i = 0; i < maxTrailCount; i++) {
+      const trail = document.createElement('div');
+      trail.classList.add('cursor-trail');
+      trail.style.position = 'fixed';
+      trail.style.width = '8px';
+      trail.style.height = '8px';
+      trail.style.borderRadius = '50%';
+      trail.style.backgroundColor = 'rgba(202, 0, 0, 0.2)';
+      trail.style.pointerEvents = 'none';
+      trail.style.zIndex = '9998';
+      trail.style.opacity = `${(maxTrailCount - i) / maxTrailCount * 0.3}`;
+      trail.style.transform = 'translate(-50%, -50%)';
+      document.body.appendChild(trail);
+      trailEffects.push(trail);
     }
     
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      setIsVisible(true);
+    let cursorX = -100;
+    let cursorY = -100;
+    let trailPositions: { x: number, y: number }[] = trailEffects.map(() => ({ x: -100, y: -100 }));
+    
+    window.addEventListener('mousemove', (e) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+      
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+      
+      // Ocasionalmente distorce o cursor para efeito assustador
+      if (Math.random() > 0.995) {
+        cursor.style.width = '32px';
+        cursor.style.height = '32px';
+        cursor.style.opacity = '0.8';
+        
+        setTimeout(() => {
+          cursor.style.width = '24px';
+          cursor.style.height = '24px';
+          cursor.style.opacity = '1';
+        }, 150);
+      }
+    });
+    
+    // Atualiza as posições de rastro
+    const updateTrailPositions = () => {
+      for (let i = trailPositions.length - 1; i > 0; i--) {
+        trailPositions[i] = { ...trailPositions[i - 1] };
+      }
+      trailPositions[0] = { x: cursorX, y: cursorY };
+      
+      trailEffects.forEach((trail, i) => {
+        const pos = trailPositions[i];
+        trail.style.left = `${pos.x}px`;
+        trail.style.top = `${pos.y}px`;
+      });
+      
+      requestAnimationFrame(updateTrailPositions);
     };
     
-    const handleMouseLeave = () => {
-      setIsVisible(false);
+    updateTrailPositions();
+    
+    // Trata interação com elementos clicáveis
+    document.addEventListener('mousedown', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(0.9)';
+    });
+    
+    document.addEventListener('mouseup', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+    
+    const handleHover = () => {
+      cursor.style.width = '32px';
+      cursor.style.height = '32px';
     };
     
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
+    const handleMouseOut = () => {
+      cursor.style.width = '24px';
+      cursor.style.height = '24px';
+    };
+    
+    const links = document.querySelectorAll('a, button');
+    links.forEach((link) => {
+      link.addEventListener('mouseenter', handleHover);
+      link.addEventListener('mouseleave', handleMouseOut);
+    });
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
+      cursor.remove();
+      trailEffects.forEach(trail => trail.remove());
+      links.forEach((link) => {
+        link.removeEventListener('mouseenter', handleHover);
+        link.removeEventListener('mouseleave', handleMouseOut);
+      });
     };
   }, [reducedMotion]);
   
-  // Não renderizar nada se os efeitos estiverem reduzidos ou o cursor não estiver visível
-  if (!isVisible || reducedMotion || document.documentElement.classList.contains('reduce-motion')) return null;
-  
-  return (
-    <>
-      <div 
-        className="fixed pointer-events-none z-50 mix-blend-difference"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: 'translate(-50%, -50%)'
-        }}
-        aria-hidden="true"
-      >
-        <div className="relative">
-          <div className="w-6 h-6 rounded-full border-2 border-blood-red animate-pulse-soft opacity-70"></div>
-          <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-blood-red rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-        </div>
-      </div>
-      <div 
-        className="fixed pointer-events-none z-40 opacity-20 blur-sm"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: 'translate(-50%, -50%) scale(2)',
-          transition: 'transform 1s ease-out'
-        }}
-        aria-hidden="true"
-      >
-        <div className="w-10 h-10 rounded-full bg-blood-red/30 animate-pulse-soft"></div>
-      </div>
-    </>
-  );
+  // Não renderiza nada no DOM, apenas adiciona o cursor via JS
+  return null;
 };
 
 export default HauntedCursor;

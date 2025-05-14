@@ -1,113 +1,299 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos base */
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 30 20% 96%;
-
-    --card: 0 0% 5%;
-    --card-foreground: 30 15% 90%;
-
-    --popover: 0 0% 3%;
-    --popover-foreground: 30 15% 90%;
-
-    --primary: 0 80% 40%;
-    --primary-foreground: 30 20% 96%;
-
-    --secondary: 25 40% 15%;
-    --secondary-foreground: 30 20% 96%;
-
-    --muted: 0 0% 15%;
-    --muted-foreground: 30 10% 65%;
-
-    --accent: 25 40% 20%;
-    --accent-foreground: 30 20% 96%;
-
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 72.2% 50.6%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0, 80%, 50%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 30 20% 96%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 30 70% 40%;
-
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 72.2% 50.6%;
     --radius: 0.5rem;
+    
+    /* Cores específicas do tema */
+    --color-blood-red: 0 72% 35%;
+    --color-aged-white: 30 30% 90%;
+  }
 
-    --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 30 15% 90%;
-    --sidebar-primary: 0 80% 40%;
-    --sidebar-primary-foreground: 30 20% 96%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 30 15% 90%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 30 70% 40%;
+  .high-contrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
+    --primary: 0 100% 50%;
+    --color-blood-red: 0 100% 50%;
+    --color-aged-white: 0 0% 100%;
+    --muted-foreground: 0 0% 80%;
   }
   
-  .high-contrast {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 100%;
-    
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 100%;
-    
-    --primary: 0 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    
-    --border: 0 0% 40%;
-    --ring: 0 100% 50%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
-
+  
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  ::selection {
-    @apply bg-blood-red/50 text-aged-white;
+  /* Skip link para acessibilidade por teclado */
+  .skip-link {
+    @apply absolute left-[-9999px] z-[100] bg-background p-2 text-foreground;
+    
+    &:focus {
+      @apply left-2 top-2;
+    }
   }
   
-  /* Acessibilidade - Redução de movimentos */
-  .reduce-motion * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
+  /* Cursor personalizado */
+  body.cursor-none,
+  body.cursor-none * {
+    cursor: none !important;
   }
   
-  /* Melhorar a visibilidade do foco */
-  :focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  /* Efeito de link com hover underline */
+  .link-underline {
+    position: relative;
+    text-decoration: none;
   }
   
-  /* Links mais perceptíveis */
-  a:not(.no-underline) {
-    @apply underline underline-offset-2 hover:text-primary;
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: theme('colors.blood-red.DEFAULT');
+    transition: width 0.3s ease;
+  }
+  
+  .link-underline:hover::after,
+  .link-underline:focus::after {
+    width: 100%;
+  }
+  
+  /* Animação desativável */
+  @media (prefers-reduced-motion: reduce), (reduce-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-@layer components {
-  .link-underline {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-blood-red after:transition-all after:duration-300 hover:after:w-full;
+@layer utilities {
+  /* Cores do tema */
+  .text-blood-red {
+    color: hsl(var(--color-blood-red));
   }
   
-  .card-hover {
-    @apply transition-all duration-500 hover:shadow-[0_0_15px_rgba(202,0,0,0.3)] hover:scale-[1.02];
+  .bg-blood-red {
+    background-color: hsl(var(--color-blood-red));
   }
   
-  /* Componentes acessíveis */
-  .sr-only {
-    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  .border-blood-red {
+    border-color: hsl(var(--color-blood-red));
   }
   
-  .skip-link {
-    @apply absolute left-4 top-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md transform -translate-y-20 focus:translate-y-0 transition-transform;
+  .text-aged-white {
+    color: hsl(var(--color-aged-white));
   }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes mist-flow {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px) translateY(0);
+  }
+  50% {
+    opacity: 0.05;
+    transform: translateX(0) translateY(-5px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(10px) translateY(0);
+  }
+}
+
+@keyframes blood-drip {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    height: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes mystical-fade {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  8%, 10% {
+    opacity: 0.85;
+  }
+  9% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes text-glitch {
+  0% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+}
+
+@keyframes ghost-float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-15px) translateX(5px) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes jumpscare {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s infinite ease-in-out;
+}
+
+.animate-float {
+  animation: float 6s ease infinite;
+}
+
+.animate-mist-flow {
+  animation: mist-flow 8s ease-in-out infinite;
+}
+
+.animate-blood-drip {
+  animation: blood-drip 10s ease-in infinite;
+}
+
+.animate-mystical-fade {
+  animation: mystical-fade 4s ease-in-out;
+}
+
+.animate-flicker {
+  animation: flicker 4s linear infinite;
+}
+
+.animate-text-glitch {
+  animation: text-glitch 0.3s linear;
+}
+
+.animate-ghost-float {
+  animation: ghost-float 8s ease-in-out infinite;
+}
+
+/* Reduzir animações baseado em preferências */
+.reduce-motion * {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
 }
