@@ -1,73 +1,232 @@
-# Welcome to your Lovable project
+# 🌑 Sombras do Brasil Portal
 
-## Project info
+<div align="center">
+  <img src="./public/favicon-scary.svg" alt="Sombras do Brasil" width="80" height="80" style="border-radius: 50%;">
+  
+  **"Onde o inexplicável encontra um lar"**
+  
+  [![Deploy Status](https://img.shields.io/badge/Deploy-Live-success)](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://typescriptlang.org)
+  [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+</div>
 
-**URL**: https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d
+## 📖 Sobre o Projeto
 
-## How can I edit this code?
+O **Sombras do Brasil Portal** é uma plataforma interativa dedicada às lendas urbanas e folclóricas brasileiras. Este projeto mergulha no rico universo do imaginário popular brasileiro, oferecendo uma experiência imersiva e atmosférica para explorar as histórias que moldaram nossa cultura.
 
-There are several ways of editing your application.
+### 🎯 Objetivo
 
-**Use Lovable**
+Preservar e compartilhar o folclore brasileiro através de uma experiência digital moderna, conectando tradições ancestrais com tecnologia contemporânea. O portal serve como um arquivo vivo das narrativas que alimentam nosso imaginário coletivo.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d) and start prompting.
+### ✨ Características Principais
 
-Changes made via Lovable will be committed automatically to this repo.
+- **🕯️ Experiência Imersiva**: Interface dark com elementos visuais atmosféricos
+- **📚 Biblioteca de Lendas**: Coleção curada de lendas urbanas e folclóricas brasileiras
+- **🎭 Interatividade**: Efeitos visuais e sonoros que intensificam a experiência
+- **♿ Acessibilidade**: Controles para redução de movimento e desativação de áudio
+- **📝 Contribuição Comunitária**: Usuários podem enviar suas próprias lendas
+- **🎨 Design Responsivo**: Otimizado para todos os dispositivos
 
-**Use your preferred IDE**
+### 🌟 Funcionalidades
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+#### 🏠 Página Inicial
+- Apresentação das lendas em destaque
+- Sussurros interativos e partículas ambientes
+- Navegação intuitiva com ícones místicos
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### 🔍 Exploração de Lendas
+- Grid de lendas organizadas por região
+- Sistema de busca e filtros
+- Cards informativos com prévia das histórias
 
-Follow these steps:
+#### 📖 Leitura Imersiva
+- Revelação gradual do texto com efeitos de digitação
+- Áudio ambiente atmosférico
+- Controles de acessibilidade integrados
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+#### ✍️ Envio de Lendas
+- Formulário para contribuições da comunidade
+- Validação e armazenamento local
+- Interface intuitiva para compartilhar histórias
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 🎨 Design System
 
-# Step 3: Install the necessary dependencies.
-npm i
+O projeto utiliza um design system cuidadosamente elaborado:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+- **Paleta de Cores**: Tons sépia e vermelho sangue (`#ca0000`, `#eee8d5`)
+- **Tipografia**: Playfair Display (títulos), Inter (corpo), Lora (narrativas)
+- **Componentes**: Baseados em shadcn/ui com customizações temáticas
+- **Animações**: Efeitos sutis que respeitam preferências de movimento
+
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend
+- **React 18** - Biblioteca JavaScript para construção de interfaces
+- **TypeScript** - Superset tipado do JavaScript
+- **Vite** - Build tool e dev server ultrarrápido
+- **Tailwind CSS** - Framework CSS utility-first
+
+### Componentes e UI
+- **shadcn/ui** - Componentes reutilizáveis e acessíveis
+- **Radix UI** - Primitivos de interface com foco em acessibilidade
+- **Lucide React** - Ícones modernos e limpos
+
+### Gerenciamento de Estado e Dados
+- **TanStack Query** - Gerenciamento de estado do servidor
+- **React Hook Form** - Gerenciamento de formulários performático
+- **Local Storage** - Persistência de dados do usuário
+
+### Funcionalidades Especiais
+- **Áudio atmosférico** - Sons ambientes para imersão
+- **Efeitos visuais** - Partículas, sussurros e animações temáticas
+- **Acessibilidade** - Controles para usuários com diferentes necessidades
+- **PWA Ready** - Otimizado para instalação como app
+
+### Ferramentas de Desenvolvimento
+- **ESLint** - Linting e qualidade de código
+- **PostCSS** - Processamento de CSS
+- **TypeScript Config** - Configuração tipada rigorosa
+
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+
+### Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/SuianeSilva86/sombras-brasil-portal.git
+
+# Navegue até o diretório
+cd sombras-brasil-portal
+
+# Instale as dependências
+npm install
+
+# Execute o projeto em modo de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Scripts Disponíveis
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run dev      # Inicia o servidor de desenvolvimento
+npm run build    # Gera build de produção
+npm run preview  # Visualiza o build de produção
+npm run lint     # Executa verificação de código
+```
 
-**Use GitHub Codespaces**
+## 📱 Funcionalidades de Acessibilidade
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+O projeto foi desenvolvido pensando na inclusão de todos os usuários:
 
-## What technologies are used for this project?
+- **Redução de Movimento**: Controle para usuários sensíveis a animações
+- **Controle de Áudio**: Ativação/desativação de sons atmosféricos
+- **Navegação por Teclado**: Totalmente navegável via teclado
+- **Leitores de Tela**: Compatível com tecnologias assistivas
+- **Alto Contraste**: Paleta de cores otimizada para legibilidade
 
-This project is built with:
+## 🎭 Lendas Disponíveis
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+O portal conta com uma rica coleção de lendas brasileiras:
 
-## How can I deploy this project?
+- **Curupira** - Protetor das florestas com pés virados
+- **Boto-cor-de-rosa** - Encantador das águas amazônicas
+- **Iara** - Sereia dos rios brasileiros
+- **Saci-Pererê** - Travesso de uma perna só
+- **Mula Sem Cabeça** - Maldição dos pecados proibidos
+- **Lobisomem** - Transformação nas noites de lua cheia
 
-Simply open [Lovable](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d) and click on Share -> Publish.
+*E muitas outras que você pode descobrir explorando o portal...*
 
-## Can I connect a custom domain to my Lovable project?
+## 🤝 Como Contribuir
 
-Yes, you can!
+### Enviando uma Nova Lenda
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Acesse a página "Enviar Lenda" no portal
+2. Preencha o formulário com:
+   - Título da lenda
+   - Região de origem
+   - História completa
+   - Autor/fonte (opcional)
+3. Sua lenda será armazenada localmente e exibida no portal
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Contribuindo com Código
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📦 Estrutura do Projeto
+
+```
+src/
+├── components/          # Componentes reutilizáveis
+│   ├── ui/             # Componentes base (shadcn/ui)
+│   ├── AccessibilityControls.tsx
+│   ├── HauntedBackground.tsx
+│   ├── HauntedCursor.tsx
+│   └── ...
+├── pages/              # Páginas da aplicação
+│   ├── Index.tsx       # Página inicial
+│   ├── Explorar.tsx    # Exploração de lendas
+│   ├── LerLenda.tsx    # Leitura individual
+│   └── Enviar.tsx      # Envio de lendas
+├── hooks/              # Hooks customizados
+├── lib/                # Utilitários e helpers
+└── ...
+```
+
+## 🌐 Deploy
+
+### Método Recomendado (Lovable)
+
+O projeto está configurado para deploy automático via [Lovable](https://lovable.dev):
+
+1. Acesse [Lovable Project](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d)
+2. Clique em "Share" → "Publish"
+3. Seu site estará disponível instantaneamente
+
+### Deploy Manual
+
+O projeto pode ser deployado em qualquer plataforma que suporte sites estáticos:
+
+- **Vercel**: `npm run build` + upload da pasta `dist`
+- **Netlify**: Conecte o repositório GitHub
+- **GitHub Pages**: Configure GitHub Actions para build automático
+
+### Domínio Customizado
+
+Para conectar um domínio personalizado:
+1. Navegue para Project > Settings > Domains no Lovable
+2. Clique em "Connect Domain"
+3. Siga as instruções para configurar o DNS
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Equipe
+
+- **Desenvolvimento**: [Suiane Silva](https://github.com/SuianeSilva86)
+- **Design**: Interface temática inspirada no folclore brasileiro
+- **Conteúdo**: Lendas curadas do patrimônio cultural brasileiro
+
+## 🙏 Agradecimentos
+
+- Às comunidades que preservam nossas lendas
+- Aos contadores de histórias que mantêm viva nossa tradição oral
+- À rica cultura folclórica brasileira que inspira este projeto
+
+---
+
+<div align="center">
+  <p><em>"Nas sombras do Brasil, cada lenda tem sua verdade"</em></p>
+  
+  ⭐ Se este projeto te inspirou, deixe uma estrela!
+</div>
