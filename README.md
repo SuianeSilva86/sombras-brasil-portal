@@ -4,8 +4,7 @@
   <img src="./public/favicon-scary.svg" alt="Sombras do Brasil" width="80" height="80" style="border-radius: 50%;">
   
   **"Onde o inexplicável encontra um lar"**
-  
-  [![Deploy Status](https://img.shields.io/badge/Deploy-Live-success)](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d)
+
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://typescriptlang.org)
   [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -184,14 +183,6 @@ src/
 
 ## 🌐 Deploy
 
-### Método Recomendado (Lovable)
-
-O projeto está configurado para deploy automático via [Lovable](https://lovable.dev):
-
-1. Acesse [Lovable Project](https://lovable.dev/projects/00986db3-361d-4280-b4d7-1d1b5196958d)
-2. Clique em "Share" → "Publish"
-3. Seu site estará disponível instantaneamente
-
 ### Deploy Manual
 
 O projeto pode ser deployado em qualquer plataforma que suporte sites estáticos:
@@ -200,12 +191,6 @@ O projeto pode ser deployado em qualquer plataforma que suporte sites estáticos
 - **Netlify**: Conecte o repositório GitHub
 - **GitHub Pages**: Configure GitHub Actions para build automático
 
-### Domínio Customizado
-
-Para conectar um domínio personalizado:
-1. Navegue para Project > Settings > Domains no Lovable
-2. Clique em "Connect Domain"
-3. Siga as instruções para configurar o DNS
 
 ## 📄 Licença
 
