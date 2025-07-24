@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import FeaturedLegend from '@/components/FeaturedLegend';
 import LegendCollection from '@/components/LegendCollection';
 import Footer from '@/components/Footer';
 import ScaryText from '@/components/ScaryText';
-import { Volume2, VolumeX } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/components/ui/use-toast';
 import RitualIcon from '@/components/RitualIcon';
@@ -44,6 +42,9 @@ const CreepyWhispers = ({ reduced = false }) => {
     "ela vem à meia-noite...",
     "sussurros na escuridão...",
     "nunca saia sozinho...",
+    "cuidado com o que você deseja...",
+    "a escuridão está viva...",
+    "deseje o mal e ele virá...",
   ];
   
   const [visibleWhisper, setVisibleWhisper] = useState<number | null>(null);
@@ -125,7 +126,6 @@ const RandomJumpscare = ({ reduced = false }) => {
 };
 
 const Index = () => {
-  const [audioPlaying, setAudioPlaying] = useState(false);
   const [reducedEffects, setReducedEffects] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -136,31 +136,10 @@ const Index = () => {
     const shouldReduceEffects = storedSetting ? JSON.parse(storedSetting) : prefersReducedMotion;
     setReducedEffects(shouldReduceEffects);
     
-    // Verifica se devemos desabilitar o áudio por padrão
-    const audioDisabled = localStorage.getItem('a11y-audio-disabled');
-    if (audioDisabled === 'false') {
-      const audioElement: HTMLAudioElement = document.getElementById('ambient-audio') as HTMLAudioElement;
-      if (audioElement) {
-        audioElement.volume = 0.3; // Volume mais baixo por padrão
-        audioElement.play()
-          .then(() => setAudioPlaying(true))
-          .catch(() => console.log("Reprodução de áudio bloqueada pelo navegador"));
-      }
-    }
-    
     // Monitora mudanças nas configurações de acessibilidade
     const handleSettingsChange = () => {
       const reducedMotion = localStorage.getItem('a11y-reduced-motion');
       setReducedEffects(reducedMotion === 'true');
-      
-      const audioDisabled = localStorage.getItem('a11y-audio-disabled');
-      if (audioDisabled === 'true' && audioPlaying) {
-        const audioElement: HTMLAudioElement = document.getElementById('ambient-audio') as HTMLAudioElement;
-        if (audioElement) {
-          audioElement.pause();
-          setAudioPlaying(false);
-        }
-      }
     };
     
     window.addEventListener('storage', handleSettingsChange);
@@ -184,47 +163,13 @@ const Index = () => {
       window.removeEventListener('storage', handleSettingsChange);
       document.removeEventListener('a11y-settings-changed', handleSettingsChange);
     };
-  }, [audioPlaying]);
-  
-  const toggleAudio = () => {
-    const audioElement: HTMLAudioElement = document.getElementById('ambient-audio') as HTMLAudioElement;
-    
-    if (audioPlaying) {
-      audioElement.pause();
-      localStorage.setItem('a11y-audio-disabled', 'true');
-    } else {
-      audioElement.play().catch(err => console.error("Erro ao reproduzir áudio:", err));
-      localStorage.setItem('a11y-audio-disabled', 'false');
-    }
-    
-    setAudioPlaying(!audioPlaying);
-    document.dispatchEvent(new Event('a11y-settings-changed'));
-  };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
       <AmbientParticles reduced={reducedEffects} />
       <CreepyWhispers reduced={reducedEffects} />
       <RandomJumpscare reduced={reducedEffects} />
-      
-      <audio 
-        id="ambient-audio" 
-        loop 
-        preload="none" 
-        className="hidden"
-        aria-label="Áudio ambiente de atmosfera assustadora"
-      >
-        <source src="https://freesound.org/data/previews/398/398655_4921277-lq.mp3" type="audio/mpeg" />
-        Seu navegador não suporta o elemento de áudio.
-      </audio>
-      
-      <button
-        onClick={toggleAudio}
-        className="fixed bottom-4 right-4 z-50 p-2 bg-card border border-muted rounded-full opacity-60 hover:opacity-100 transition-opacity focus:ring-2 focus:ring-primary focus:outline-none"
-        aria-label={audioPlaying ? "Desativar áudio ambiente" : "Ativar áudio ambiente"}
-      >
-        {audioPlaying ? <VolumeX size={16} /> : <Volume2 size={16} />}
-      </button>
       
       <div id="main-content" className="container mx-auto px-4 flex-grow flex flex-col relative z-10">
         <Header />
@@ -246,12 +191,12 @@ const Index = () => {
           <main className="flex-grow flex flex-col items-center">
             <div className="w-full text-center my-6">
               <ScaryText 
-                text="Bem-vindo às Sombras do Brasil" 
+                text="Bem-vindo às Lendas do Brasil" 
                 className="font-playfair text-3xl md:text-4xl text-blood-red"
                 respectReducedMotion={true}
               />
               <p className="font-lora text-aged-white/70 mt-2 italic">
-                onde os pesadelos ganham vida e as lendas nunca morrem
+                onde as lendas são contadas e jamais esquecidas.
               </p>
             </div>
             <FeaturedLegend />

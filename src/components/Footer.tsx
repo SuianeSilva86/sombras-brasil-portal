@@ -9,7 +9,7 @@ const Footer = () => {
           "Entre se ousar. Saia se puder."
         </p>
         <p className="text-muted-foreground/60 text-xs font-inter mt-2">
-          &copy; 2025 Sombras do Brasil – histórias que vivem nas sombras
+          &copy; 2025 Lendas do Brasil – histórias que marcam gerações
         </p>
       </div>
     </footer>

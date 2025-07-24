@@ -14,10 +14,13 @@ const messages = [
   'não olhe para trás...',
   'eles estão observando...',
   'você ouviu isso?',
+  'cuidado com o que você deseja...',
+  'a escuridão está viva...',
+  'deseje o mal e ele virá...',
 ];
 const randomMessage = messages[Math.floor(Math.random() * messages.length)];
 setTimeout(() => {
   console.log(`%c${randomMessage}`, 'color:#666; font-style:italic; font-size:11px;');
-}, 10000);
+}, 1000);
 
 createRoot(document.getElementById("root")!).render(<App />);

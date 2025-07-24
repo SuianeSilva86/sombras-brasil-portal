@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +10,6 @@ import LerLenda from "./pages/LerLenda";
 import NotFound from "./pages/NotFound";
 import TextureOverlay from "./components/TextureOverlay";
 import HauntedBackground from "./components/HauntedBackground";
-import HauntedCursor from "./components/HauntedCursor";
 import AccessibilityControls from "./components/AccessibilityControls";
 import { useEffect, useState } from "react";
 
@@ -35,30 +33,17 @@ const App = () => {
       newLink.href = "/favicon-scary.svg";
       document.head.appendChild(newLink);
     }
-    
-    // Don't add cursor-none if reduced motion is enabled
-    if (!reducedMotion) {
-      document.body.classList.add("cursor-none");
-    }
-    
-    // Listen for reduced motion changes
+
+
     const handleReducedMotionChange = () => {
       const reducedMotionSetting = localStorage.getItem('a11y-reduced-motion');
       const newSetting = reducedMotionSetting === 'true';
       setReducedMotion(newSetting);
-      
-      // Toggle cursor-none class based on reduced motion
-      if (newSetting) {
-        document.body.classList.remove("cursor-none");
-      } else {
-        document.body.classList.add("cursor-none");
-      }
     };
-    
+
     window.addEventListener('storage', handleReducedMotionChange);
-    
+
     return () => {
-      document.body.classList.remove("cursor-none");
       window.removeEventListener('storage', handleReducedMotionChange);
     };
   }, [reducedMotion]);
@@ -73,7 +58,6 @@ const App = () => {
         
         <TextureOverlay variant="paper" opacity={reducedMotion ? 0.02 : 0.05} />
         <HauntedBackground intensity="medium" reducedMotion={reducedMotion} />
-        <HauntedCursor reducedMotion={reducedMotion} />
         <AccessibilityControls />
         
         <Toaster />

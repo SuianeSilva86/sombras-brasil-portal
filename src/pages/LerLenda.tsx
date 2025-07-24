@@ -1,15 +1,15 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import RitualButton from '@/components/RitualButton';
 import RitualIcon from '@/components/RitualIcon';
-import { ArrowLeft, User, BookOpen, VolumeX, Volume2 } from 'lucide-react';
+import { ArrowLeft, User, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MysticalTypingEffect from '@/components/MysticalTypingEffect';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
+import legendsData from '@/data/legends.json';
 
 interface Lenda {
   id: number;
@@ -18,23 +18,22 @@ interface Lenda {
   title: string;
   story: string;
   createdAt: string;
+  region?: string;
+  description?: string;
 }
 
-const LerLenda = () => {
+export const LerLenda = () => {
   const { id } = useParams<{ id: string }>();
   const [lenda, setLenda] = useState<Lenda | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [revealStory, setRevealStory] = useState<boolean>(false);
   const [paragraphIndex, setParagraphIndex] = useState<number>(0);
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(false);
   const [autoScroll, setAutoScroll] = useState<boolean>(true);
   const [reducedMotion, setReducedMotion] = useState(() => {
     const stored = localStorage.getItem('a11y-reduced-motion');
     return stored ? JSON.parse(stored) : false;
   });
   
-  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
-  const pageEventAudioRef = useRef<HTMLAudioElement | null>(null);
   const storyContentRef = useRef<HTMLDivElement | null>(null);
   const currentParagraphRef = useRef<HTMLParagraphElement | null>(null);
 
@@ -42,9 +41,17 @@ const LerLenda = () => {
   useEffect(() => {
     setLoading(true);
     try {
-      const legends = JSON.parse(localStorage.getItem("legends") || "[]");
-      const found = legends.find((l: Lenda) => l.id === Number(id));
-      setLenda(found || null);
+      // First try to find in traditional legends from JSON
+      const traditionalLegend = legendsData.legends.find((l: any) => l.id === Number(id));
+      
+      if (traditionalLegend) {
+        setLenda(traditionalLegend);
+      } else {
+        // Fallback to user-submitted legends in localStorage
+        const legends = JSON.parse(localStorage.getItem("legends") || "[]");
+        const found = legends.find((l: Lenda) => l.id === Number(id));
+        setLenda(found || null);
+      }
       
       // Reset state when loading a new legend
       setRevealStory(false);
@@ -62,16 +69,10 @@ const LerLenda = () => {
     if (lenda && !revealStory) {
       const timer = setTimeout(() => {
         setRevealStory(true);
-        // Play mystical sound when revealing the story
-        if (soundEnabled && pageEventAudioRef.current) {
-          pageEventAudioRef.current.src = "https://freesound.org/data/previews/527/527741_5479102-lq.mp3"; // page turning sound
-          pageEventAudioRef.current.volume = 0.4;
-          pageEventAudioRef.current.play().catch(e => console.error("Error playing audio:", e));
-        }
       }, reducedMotion ? 500 : 2000);
       return () => clearTimeout(timer);
     }
-  }, [lenda, revealStory, soundEnabled, reducedMotion]);
+  }, [lenda, revealStory, reducedMotion]);
 
   // Gradually reveal paragraphs with timing based on paragraph length
   useEffect(() => {
@@ -89,14 +90,6 @@ const LerLenda = () => {
         
         const timer = setTimeout(() => {
           setParagraphIndex(prev => prev + 1);
-          
-          // Play soft ambient sound when revealing new paragraph
-          if (soundEnabled && pageEventAudioRef.current) {
-            pageEventAudioRef.current.src = "https://freesound.org/data/previews/367/367480_1324266-lq.mp3"; // soft page turn
-            pageEventAudioRef.current.volume = 0.2;
-            pageEventAudioRef.current.play().catch(e => console.error("Error playing audio:", e));
-          }
-          
         }, revealDelay);
         
         return () => clearTimeout(timer);
@@ -113,65 +106,6 @@ const LerLenda = () => {
       });
     }
   }, [paragraphIndex, autoScroll, reducedMotion]);
-
-  // Handle audio enabling/disabling
-  useEffect(() => {
-    if (soundEnabled) {
-      // Start ambient background audio
-      if (ambientAudioRef.current) {
-        ambientAudioRef.current.volume = 0.1;
-        ambientAudioRef.current.loop = true;
-        ambientAudioRef.current.play().catch(e => {
-          console.error("Error playing ambient audio:", e);
-          toast({
-            title: "Não foi possível reproduzir o áudio",
-            description: "Verifique se seu navegador permite reprodução de áudio",
-            variant: "destructive"
-          });
-          setSoundEnabled(false);
-        });
-      }
-    } else {
-      // Stop all audio
-      if (ambientAudioRef.current) {
-        ambientAudioRef.current.pause();
-        ambientAudioRef.current.currentTime = 0;
-      }
-      if (pageEventAudioRef.current) {
-        pageEventAudioRef.current.pause();
-        pageEventAudioRef.current.currentTime = 0;
-      }
-    }
-    
-    // Check if audio is disabled in accessibility settings
-    const audioDisabled = localStorage.getItem('a11y-audio-disabled');
-    if (audioDisabled === 'true' && soundEnabled) {
-      setSoundEnabled(false);
-    }
-    
-    return () => {
-      // Clean up audio when component unmounts
-      if (ambientAudioRef.current) {
-        ambientAudioRef.current.pause();
-        ambientAudioRef.current.currentTime = 0;
-      }
-      if (pageEventAudioRef.current) {
-        pageEventAudioRef.current.pause();
-        pageEventAudioRef.current.currentTime = 0;
-      }
-    };
-  }, [soundEnabled]);
-
-  // Handle toggle audio
-  const toggleSound = () => {
-    setSoundEnabled(prev => !prev);
-    if (!soundEnabled) {
-      toast({
-        title: "Sons ativados",
-        description: "Áudio atmosférico adicionado à sua experiência",
-      });
-    }
-  };
 
   // Showing loading state
   if (loading) {
@@ -223,10 +157,10 @@ const LerLenda = () => {
       <div className="container mx-auto px-4 flex-grow">
         <Header />
         
-        <main className="flex-grow py-8">
-          <div className="max-w-4xl mx-auto">
+        <main className="flex-grow py-6 sm:py-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6">
             {/* Navigation and controls */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
               <Link to="/explorar">
                 <RitualButton 
                   variant="ghost" 
@@ -236,57 +170,48 @@ const LerLenda = () => {
                   Retornar
                 </RitualButton>
               </Link>
-              
-              <div className="flex items-center space-x-2">
-                <button 
-                  onClick={toggleSound} 
-                  className={cn(
-                    "flex items-center justify-center p-2 rounded-full transition-colors",
-                    soundEnabled 
-                      ? "bg-blood-red/20 text-blood-red hover:bg-blood-red/30" 
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  )}
-                  title={soundEnabled ? "Desativar sons" : "Ativar sons"}
-                >
-                  {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-                </button>
-              </div>
             </div>
             
             {/* Title and Author info */}
-            <div className="mb-8 animate-fade-in">
-              <h1 className="font-playfair text-3xl md:text-4xl text-aged-white mb-4">
+            <div className="mb-6 sm:mb-8 animate-fade-in">
+              <h1 className="font-playfair text-2xl sm:text-3xl md:text-4xl text-aged-white mb-4">
                 {lenda.title}
               </h1>
               
-              <div className="flex items-center text-muted-foreground text-sm">
-                <div className="flex items-center mr-4">
+              <div className="flex flex-wrap items-center text-muted-foreground text-sm sm:text-base">
+                <div className="flex items-center mr-4 mb-2 sm:mb-0">
                   <User className="h-4 w-4 mr-1.5" />
                   <span>{lenda.authorName}</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center mr-4 mb-2 sm:mb-0">
                   <BookOpen className="h-4 w-4 mr-1.5" />
                   <span>{new Date(lenda.createdAt).toLocaleDateString("pt-BR")}</span>
                 </div>
+                {lenda.region && (
+                  <div className="flex items-center">
+                    <RitualIcon icon="star" className="h-4 w-4 mr-1.5" />
+                    <span>{lenda.region}</span>
+                  </div>
+                )}
               </div>
               
-              <div className="mt-4 h-px w-32 bg-blood-red/50"></div>
+              <div className="mt-4 h-px w-24 bg-blood-red/50"></div>
             </div>
             
             {/* Mystical quote before story */}
             <div className={cn(
-              "text-center italic font-lora text-aged-white/70 my-8 transition-opacity duration-1000",
+              "text-center italic font-lora text-aged-white/70 my-6 sm:my-8 transition-opacity duration-1000",
               revealStory ? "opacity-0 h-0 overflow-hidden" : "opacity-100"
             )}>
               <MysticalTypingEffect 
                 text="Dizem que esta história nunca deveria ser contada..." 
-                className="text-lg"
+                className="text-base sm:text-lg"
               />
             </div>
             
             {/* Story content with scroll area */}
-            <div ref={storyContentRef} className="bg-card border border-muted rounded-lg p-6 md:p-8 shadow-lg mb-6">
-              <ScrollArea className="h-[60vh] pr-4">
+            <div ref={storyContentRef} className="bg-card border border-muted rounded-lg p-4 sm:p-6 shadow-lg mb-6">
+              <ScrollArea className="h-[50vh] sm:h-[60vh] pr-2 sm:pr-4">
                 <div className="prose prose-invert max-w-none">
                   {revealStory && paragraphs.map((paragraph, index) => {
                     const isCurrentParagraph = index === paragraphIndex;
@@ -296,7 +221,7 @@ const LerLenda = () => {
                         key={index} 
                         ref={isCurrentParagraph ? currentParagraphRef : null}
                         className={cn(
-                          "font-lora text-aged-white/90 mb-6 leading-relaxed transition-all duration-1000",
+                          "font-lora text-aged-white/90 mb-4 sm:mb-6 leading-relaxed transition-all duration-1000",
                           index <= paragraphIndex ? "opacity-100" : "opacity-0 h-0 overflow-hidden",
                           isCurrentParagraph && "border-l-2 border-blood-red/30 pl-4 bg-card/50"
                         )}
@@ -308,19 +233,13 @@ const LerLenda = () => {
                   
                   {/* Show a progress note at the end */}
                   {revealStory && paragraphIndex >= paragraphs.length - 1 && (
-                    <div className="text-center text-aged-white/60 italic mt-8 font-lora">
+                    <div className="text-center text-aged-white/60 italic mt-6 sm:mt-8 font-lora">
                       ~ Fim da história ~
                     </div>
                   )}
                 </div>
               </ScrollArea>
             </div>
-            
-            {/* Audio elements */}
-            <audio ref={ambientAudioRef} preload="none">
-              <source src="https://freesound.org/data/previews/572/572986_7031081-lq.mp3" type="audio/mpeg" />
-            </audio>
-            <audio ref={pageEventAudioRef} preload="none"></audio>
           </div>
         </main>
         

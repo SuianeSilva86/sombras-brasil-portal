@@ -10,7 +10,7 @@ const Header = () => {
       <div className="flex items-center mb-3">
         <RitualIcon icon="moon" className="h-6 w-6 mr-3 text-blood-red animate-pulse-soft" />
         <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl tracking-wider text-aged-white">
-          Sombras do Brasil
+          Lendas do Brasil
         </h1>
         <RitualIcon icon="moon" className="h-6 w-6 ml-3 text-blood-red animate-pulse-soft" />
       </div>
@@ -29,11 +29,11 @@ const Header = () => {
         </Link>
         <Link to="/explorar" className="font-inter text-sm uppercase tracking-wider link-underline text-aged-white flex items-center group">
           <RitualIcon icon="eye" className="h-4 w-4 mr-1.5 transition-transform group-hover:scale-110" />
-          Desvendar Ecos
+          Descobrir lendas
         </Link>
         <Link to="/enviar" className="font-inter text-sm uppercase tracking-wider link-underline text-aged-white flex items-center group">
           <RitualIcon icon="flame" className="h-4 w-4 mr-1.5 transition-transform group-hover:rotate-12" />
-          Oferecer sua Memória
+          Conte a sua história
         </Link>
       </nav>
     </header>
