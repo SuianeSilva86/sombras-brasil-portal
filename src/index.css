@@ -60,12 +60,6 @@
     }
   }
   
-  /* Cursor personalizado */
-  body.cursor-none,
-  body.cursor-none * {
-    cursor: none !important;
-  }
-  
   /* Fallback when custom cursor might not work */
   @media (pointer: coarse) {
     body.cursor-none,
@@ -87,7 +81,7 @@
     left: 0;
     width: 0;
     height: 1px;
-    background-color: theme('colors.blood-red.DEFAULT');
+    background-color: hsl(var(--color-blood-red));
     transition: width 0.3s ease;
   }
   
@@ -125,6 +119,36 @@
   
   .text-aged-white {
     color: hsl(var(--color-aged-white));
+  }
+
+  .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
   }
 }
 

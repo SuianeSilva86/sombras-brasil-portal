@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Settings, 
   EyeOff, 
-  VolumeX, 
   Moon,
   X
 } from 'lucide-react';
@@ -25,10 +23,6 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
     const stored = localStorage.getItem('a11y-high-contrast');
     return stored ? JSON.parse(stored) : false;
   });
-  const [audioDisabled, setAudioDisabled] = useState(() => {
-    const stored = localStorage.getItem('a11y-audio-disabled');
-    return stored ? JSON.parse(stored) : true;
-  });
 
   useEffect(() => {
     localStorage.setItem('a11y-reduced-motion', JSON.stringify(reducedMotion));
@@ -40,12 +34,16 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
         title: "Modo Seguro Ativado",
         description: "Os efeitos assustadores foram reduzidos para sua segurança.",
         className: "bg-background border-blue-500 text-blue-500",
+        "aria-live": "polite",
+        role: "status"
       });
     } else {
       toast({
         title: "Experiência Completa Ativada",
         description: "Prepare-se para encontrar as sombras...",
         className: "bg-background border-blood-red text-blood-red",
+        "aria-live": "polite",
+        role: "status"
       });
     }
   }, [reducedMotion]);
@@ -54,18 +52,6 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
     localStorage.setItem('a11y-high-contrast', JSON.stringify(highContrast));
     document.documentElement.classList.toggle('high-contrast', highContrast);
   }, [highContrast]);
-
-  useEffect(() => {
-    localStorage.setItem('a11y-audio-disabled', JSON.stringify(audioDisabled));
-    
-    // Disable audio elements if setting is true
-    const audioElement: HTMLAudioElement | null = document.getElementById('ambient-audio') as HTMLAudioElement;
-    if (audioElement) {
-      if (audioDisabled) {
-        audioElement.pause();
-      }
-    }
-  }, [audioDisabled]);
 
   return (
     <div className={cn("fixed bottom-4 left-4 z-50", className)}>
@@ -114,18 +100,6 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
                 <span className="text-sm">Alto contraste</span>
               </Button>
               
-              <Button
-                variant={audioDisabled ? "default" : "outline"}
-                className={cn(
-                  "w-full justify-start text-left",
-                  audioDisabled ? "bg-primary text-primary-foreground" : "bg-transparent"
-                )}
-                onClick={() => setAudioDisabled(!audioDisabled)}
-              >
-                <VolumeX size={16} className="mr-2" />
-                <span className="text-sm">Desativar sons</span>
-              </Button>
-              
               <p className="text-xs text-muted-foreground mt-2 italic">
                 Essas opções garantem uma experiência segura para todos
               </p>
@@ -138,3 +112,4 @@ const AccessibilityControls: React.FC<AccessibilitySettingsProps> = ({ className
 };
 
 export default AccessibilityControls;
+  

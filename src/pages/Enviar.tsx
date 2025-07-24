@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { Send, User } from 'lucide-react';
+import emailjs from 'emailjs-com'; // Import EmailJS
 
 const formSchema = z.object({
   authorType: z.enum(["named", "anonymous"]),
@@ -20,6 +20,7 @@ const formSchema = z.object({
       if (val === "" || val === undefined) return true;
       return val.length >= 2;
     }, { message: "O nome deve ter pelo menos 2 caracteres" }),
+  authorEmail: z.string().email("Digite um e-mail válido").optional(),
   title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres" }),
   story: z.string().min(100, { message: "A história deve ter pelo menos 100 caracteres" }),
 });
@@ -28,11 +29,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 const Enviar = () => {
   const { toast } = useToast();
+  const [isSubmitted, setIsSubmitted] = useState(false); // Track submission state
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorType: "named",
       authorName: "",
+      authorEmail: "",
       title: "",
       story: "",
     },
@@ -40,30 +43,57 @@ const Enviar = () => {
 
   const watchAuthorType = form.watch("authorType");
 
-  function onSubmit(data: FormValues) {
-    // Em um cenário real, enviaríamos para uma API
-    console.log("Formulário enviado:", data);
-    
-    // Apenas para demonstração, salvamos no localStorage
-    const legends = JSON.parse(localStorage.getItem("legends") || "[]");
-    const newLegend = {
-      id: Date.now(),
-      authorType: data.authorType,
-      authorName: data.authorType === "anonymous" ? "Anônimo" : data.authorName,
-      title: data.title,
-      story: data.story,
-      createdAt: new Date().toISOString(),
-    };
-    
-    legends.push(newLegend);
-    localStorage.setItem("legends", JSON.stringify(legends));
-    
-    toast({
-      title: "Lenda enviada com sucesso!",
-      description: "Obrigado por compartilhar sua história.",
-    });
-    
-    form.reset();
+  async function onSubmit(data: FormValues) {
+    try {
+      // Send email using EmailJS
+      const templateParams = {
+        to_email: "suiane.studio@gmail.com",
+        author_type: data.authorType === "anonymous" ? "Anônimo" : "Identificado",
+        author_name: data.authorType === "anonymous" ? "Anônimo" : data.authorName,
+        author_email: data.authorType === "anonymous" ? "Não fornecido" : data.authorEmail,
+        title: data.title,
+        story: data.story,
+      };
+
+      await emailjs.send(
+        'service_5fius0j', // Replace with your EmailJS service ID
+        'template_jwo2g6s', // Replace with your EmailJS template ID
+        templateParams,
+        'dDnpcUyXMa_df3vql' // Replace with your EmailJS public API key
+      );
+
+      setIsSubmitted(true); // Show confirmation message
+      form.reset();
+    } catch (error) {
+      console.error("Erro ao enviar e-mail:", error);
+      toast({
+        title: "Erro ao enviar lenda",
+        description: "Ocorreu um problema ao enviar sua lenda. Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    }
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <div className="container mx-auto px-4 flex-grow flex flex-col items-center justify-center text-center">
+          <h1 className="font-playfair text-3xl md:text-4xl text-aged-white mb-4">
+            Lenda Enviada com Sucesso!
+          </h1>
+          <p className="font-lora text-muted-foreground max-w-lg">
+            Obrigado por compartilhar sua história. Ela será processada e, se aprovada, será publicada no site.
+          </p>
+          <Button 
+            onClick={() => setIsSubmitted(false)} 
+            className="mt-6 bg-blood-red hover:bg-blood-red/90"
+          >
+            Enviar Outra Lenda
+          </Button>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -117,22 +147,37 @@ const Enviar = () => {
                   />
                   
                   {watchAuthorType === "named" && (
-                    <FormField
-                      control={form.control}
-                      name="authorName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Seu nome</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input placeholder="Digite seu nome" {...field} />
-                              <User className="absolute right-3 top-[50%] transform -translate-y-[50%] text-muted-foreground h-4 w-4" />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="authorName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Seu nome</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input placeholder="Digite seu nome" {...field} />
+                                <User className="absolute right-3 top-[50%] transform -translate-y-[50%] text-muted-foreground h-4 w-4" />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="authorEmail"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Seu e-mail</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Digite seu e-mail" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
                   )}
                   
                   <FormField
