@@ -34,11 +34,6 @@ const App = () => {
       document.head.appendChild(newLink);
     }
 
-    // Remove cursor customization logic
-    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-    if (!isTouchDevice && !reducedMotion) {
-      document.body.classList.remove("cursor-none");
-    }
 
     const handleReducedMotionChange = () => {
       const reducedMotionSetting = localStorage.getItem('a11y-reduced-motion');

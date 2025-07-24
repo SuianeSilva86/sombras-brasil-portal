@@ -60,13 +60,6 @@
     }
   }
   
-  /* Fallback when custom cursor might not work */
-  @media (pointer: coarse) {
-    body.cursor-none,
-    body.cursor-none * {
-      cursor: auto !important;
-    }
-  }
   
   /* Efeito de link com hover underline */
   .link-underline {
@@ -281,6 +274,7 @@
     opacity: 0;
   }
 }
+
 
 .card-hover {
   transition: all 0.3s ease;

@@ -191,7 +191,7 @@ const Index = () => {
           <main className="flex-grow flex flex-col items-center">
             <div className="w-full text-center my-6">
               <ScaryText 
-                text="Bem-vindo às Sombras do Brasil" 
+                text="Bem-vindo às Lendas do Brasil" 
                 className="font-playfair text-3xl md:text-4xl text-blood-red"
                 respectReducedMotion={true}
               />
